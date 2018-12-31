@@ -52,7 +52,7 @@ def print_charge(a_charge_list,m_charge) :
     elif len(a_charge_list) == 2 :
         print("Amazon transactions on ",a_charge_list[0].date," ($",a_charge_list[0].cost,") and ",a_charge_list[1].date," ($",a_charge_list[1].cost,")"," correspond to a Mint charge on ",m_charge.date," ($",m_charge.cost,").",sep="")
     else :
-        print("Amazon transactions on ")
+        print("Amazon transactions on ",end="")
         for n in range(len(a_charge_list) - 1) :
             a = a_charge_list[n]
             print(a.date," ($",a.cost,"), ",sep="",end="")
