@@ -7,7 +7,7 @@ from charge import charge
 
 dd = csv.list_dialects()
 
-if len(sys.argv) != 2 :
+if len(sys.argv) < 3 :
     print("Usage: amazon.py <mint-file-name>")
     exit(1)
 print("sys.argv=",sys.argv)
@@ -15,7 +15,6 @@ print("sys.argv=",sys.argv)
 mint_count = 0
 mint_t_list = []
 mint_file_name = sys.argv[1]
-
 def create_mint_list(file_name) :
     global mint_count
     global mint_t_list
@@ -30,30 +29,35 @@ def create_mint_list(file_name) :
             mint_count += 1
 create_mint_list(mint_file_name)
 
-amazon_count = 0
 amazon_t_list = []
-with codecs.open("/Users/tyrus/Desktop/amazon_transactions.csv","r","utf-8") as amazon_transactions:
-    reader = csv.reader(amazon_transactions)
-    for row in reader:
-        if amazon_count > 0 :
-            amazon_cost = row[29].lstrip("$")
-            amazon_date = time.strptime(row[0],"%x")
-            dcpair = charge(amazon_date,amazon_cost)
-            amazon_t_list.append(dcpair)
-        amazon_count += 1
+def create_amazon_list(file_name) :
+    with codecs.open(file_name,"r","utf-8") as amazon_transactions:
+        amazon_count = 0
+        global amazon_t_list
+        reader = csv.reader(amazon_transactions)
+        print(amazon_count)
+        for row in reader:
+            if amazon_count > 0 :
+                amazon_cost = row[29].lstrip("$")
+                amazon_date = time.strptime(row[0],"%x")
+                dcpair = charge(amazon_date,amazon_cost)
+                amazon_t_list.append(dcpair)
+            amazon_count += 1
+for n in range(2,len(sys.argv)) :
+    create_amazon_list(sys.argv[n])
 
 def print_charge(a_charge_list,m_charge) :
     if len(a_charge_list) == 1 :
-        print("An Amazon transaction on ",a_charge_list[0].date," ($",a_charge_list[0].cost,"),"," corresponds to a Mint charge on ",m_charge.date," ($",m_charge.cost,").",sep="")
+        print("An Amazon transaction on ",a_charge_list[0].date," ($",a_charge_list[0].cost,")"," corresponds to a Mint charge on ",m_charge.date," ($",m_charge.cost,").",sep="")
     elif len(a_charge_list) == 2 :
         print("Amazon transactions on ",a_charge_list[0].date," ($",a_charge_list[0].cost,") and ",a_charge_list[1].date," ($",a_charge_list[1].cost,")"," correspond to a Mint charge on ",m_charge.date," ($",m_charge.cost,").",sep="")
     else :
         print("Amazon transactions on ")
         for n in range(len(a_charge_list) - 1) :
             a = a_charge_list[n]
-            print(a.date," ($",a[0].cost,"), ",sep="",end="")
+            print(a.date," ($",a.cost,"), ",sep="",end="")
             if n == len(a_charge_list) - 1 :
-                print("and ",a.date," ($",a[0].cost,"), ",sep="",end="")
+                print("and ",a.date," ($",a.cost,"), ",sep="",end="")
         print("correspond to a Mint charge on ",mls.date," ($",mls.cost,").",sep="")
 
 for mls in mint_t_list :
