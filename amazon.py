@@ -1,22 +1,34 @@
 import codecs
 import csv
 import time
+import sys
 from datetime import date
 from charge import charge
 
 dd = csv.list_dialects()
 
+if len(sys.argv) != 2 :
+    print("Usage: amazon.py <mint-file-name>")
+    exit(1)
+print("sys.argv=",sys.argv)
+
 mint_count = 0
 mint_t_list = []
-with codecs.open("/Users/tyrus/Desktop/foo.csv","r","utf-8") as mint_transactions:
-    reader = csv.reader(mint_transactions,dialect=csv.get_dialect('excel'))
-    for row in reader:
-        if len(row) > 8 and mint_count > 0 and row[1] == "Amazon" :
-            mint_cost = row[3]
-            mint_date = time.strptime(row[0],"%m/%d/%Y")
-            dcpair = charge(mint_date,mint_cost)
-            mint_t_list.append(dcpair)
-        mint_count += 1
+mint_file_name = sys.argv[1]
+
+def create_mint_list(file_name) :
+    global mint_count
+    global mint_t_list
+    with codecs.open(file_name,"r","utf-8") as mint_transactions:
+        reader = csv.reader(mint_transactions,dialect=csv.get_dialect('excel'))
+        for row in reader:
+            if len(row) > 8 and mint_count > 0 and row[1] == "Amazon" :
+                mint_cost = row[3]
+                mint_date = time.strptime(row[0],"%m/%d/%Y")
+                dcpair = charge(mint_date,mint_cost)
+                mint_t_list.append(dcpair)
+            mint_count += 1
+create_mint_list(mint_file_name)
 
 amazon_count = 0
 amazon_t_list = []
