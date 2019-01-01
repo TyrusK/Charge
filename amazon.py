@@ -40,7 +40,9 @@ def create_amazon_list(file_name) :
             if amazon_count > 0 :
                 amazon_cost = row[29].lstrip("$")
                 amazon_date = time.strptime(row[0],"%x")
-                dcpair = charge(amazon_date,amazon_cost)
+                amazon_buyer = row[33]
+                amazon_item = row[2]
+                dcpair = charge(amazon_date,amazon_cost,amazon_buyer,amazon_item)
                 amazon_t_list.append(dcpair)
             amazon_count += 1
 for n in range(2,len(sys.argv)) :
@@ -48,9 +50,15 @@ for n in range(2,len(sys.argv)) :
 
 def print_charge(a_charge_list,m_charge) :
     if len(a_charge_list) == 1 :
-        print("An Amazon transaction on ",a_charge_list[0].date," ($",a_charge_list[0].cost,")"," corresponds to a Mint charge on ",m_charge.date," ($",m_charge.cost,").",sep="")
+        a = a_charge_list[0]
+        print("An Amazon transaction on ",a.date," ($",a.cost,")"," corresponds to a Mint charge on ",m_charge.date," ($",m_charge.cost,").",sep="")
+        print("    ",a.buyer," -> ",a.item)
     elif len(a_charge_list) == 2 :
-        print("Amazon transactions on ",a_charge_list[0].date," ($",a_charge_list[0].cost,") and ",a_charge_list[1].date," ($",a_charge_list[1].cost,")"," correspond to a Mint charge on ",m_charge.date," ($",m_charge.cost,").",sep="")
+        a0 = a_charge_list[0]
+        a1 = a_charge_list[1]
+        print("Amazon transactions on ",a0.date," ($",a0.cost,") and ",a1.date," ($",a1.cost,")"," correspond to a Mint charge on ",m_charge.date," ($",m_charge.cost,").",sep="")
+        print("    ",a0.buyer," -> ",a0.item)
+        print("    ",a1.buyer," -> ",a1.item)
     else :
         print("Amazon transactions on ",end="")
         for n in range(len(a_charge_list) - 1) :
@@ -59,6 +67,8 @@ def print_charge(a_charge_list,m_charge) :
             if n == len(a_charge_list) - 1 :
                 print("and ",a.date," ($",a.cost,"), ",sep="",end="")
         print("correspond to a Mint charge on ",mls.date," ($",mls.cost,").",sep="")
+        for a in a_charge_list :
+            print("    ",a.buyer," -> ",a.item)
 
 for mls in mint_t_list :
     a = mls.loop_check1(amazon_t_list)

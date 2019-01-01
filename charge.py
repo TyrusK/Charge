@@ -1,9 +1,11 @@
 from datetime import date,timedelta
 class charge :
     
-    def __init__(self, cdate, cost) :
+    def __init__(self, cdate, cost, buyer="", item="") :
         self.date = date(cdate.tm_year,cdate.tm_mon,cdate.tm_mday)
         self.cost = float(cost)
+        self.buyer = buyer
+        self.item = item
         
     def date_comp(self,a_charge, target_diff) :
         return (self.date - a_charge.date) <= timedelta(target_diff,0,0) and (self.date - a_charge.date) >= timedelta(0,0,0)
