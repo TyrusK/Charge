@@ -52,13 +52,13 @@ def print_charge(a_charge_list,m_charge) :
     if len(a_charge_list) == 1 :
         a = a_charge_list[0]
         print("An Amazon transaction on ",a.date," ($",a.cost,")"," corresponds to a Mint charge on ",m_charge.date," ($",m_charge.cost,").",sep="")
-        print("    ",a.buyer," -> ",a.item)
+        print("    ",a.buyer,"for",a.cost," -> ",a.item)
     elif len(a_charge_list) == 2 :
         a0 = a_charge_list[0]
         a1 = a_charge_list[1]
         print("Amazon transactions on ",a0.date," ($",a0.cost,") and ",a1.date," ($",a1.cost,")"," correspond to a Mint charge on ",m_charge.date," ($",m_charge.cost,").",sep="")
-        print("    ",a0.buyer," -> ",a0.item)
-        print("    ",a1.buyer," -> ",a1.item)
+        print("    ",a0.buyer,"for",a0.cost," -> ",a0.item)
+        print("    ",a1.buyer,"for",a1.cost," -> ",a1.item)
     else :
         print("Amazon transactions on ",end="")
         for n in range(len(a_charge_list) - 1) :
@@ -68,7 +68,7 @@ def print_charge(a_charge_list,m_charge) :
                 print("and ",a.date," ($",a.cost,"), ",sep="",end="")
         print("correspond to a Mint charge on ",mls.date," ($",mls.cost,").",sep="")
         for a in a_charge_list :
-            print("    ",a.buyer," -> ",a.item)
+            print("    ",a.buyer,"for",a.cost," -> ",a.item)
 
 for mls in mint_t_list :
     a = mls.loop_check1(amazon_t_list)
